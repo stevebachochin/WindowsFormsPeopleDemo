@@ -20,6 +20,21 @@ namespace People
         {
             InitializeComponent();
             getAllPeople();
+           
+            //dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[0].Width = 10;
+            dataGridView1.Columns[1].HeaderText = "First Name";
+            dataGridView1.Columns[2].HeaderText = "Last Name";
+            DataGridViewImageColumn delbut = new DataGridViewImageColumn();
+            dataGridView1.Columns.Add(delbut);
+            //dataGridView1.Columns[3].Width = 50;
+            /**
+            DataGridViewImageColumn delbut = new DataGridViewImageColumn();
+            delbut.Width = 20;
+            delbut.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView1.Columns.Add(delbut);
+    **/
+
         }
 
         private void getAllPeople()
@@ -102,9 +117,9 @@ namespace People
                         sqlCommand.Parameters.AddWithValue("@LastName", lastName);
                         connection.Open();
                         sqlCommand.ExecuteNonQuery();
-                        ////getAllPeople();
-                        ////clearData();
                         ID = -1;
+                        clearData();
+                        getAllPeople();
                         MessageBox.Show("Name Added.");
                     }
                     catch
@@ -127,16 +142,15 @@ namespace People
         private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             
-            ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
-            txtFirst.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            txtLast.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+            txtFirst.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            txtLast.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
         }
 
 
         private void updateName(string firstName, string lastName)
         {
-            //MessageBox.Show(ID.ToString()+" <<<");
-            if (txtFirst.Text != "" && txtLast.Text != "" && ID != 0)
+            if (firstName != "" && lastName != "" && ID != 0)
 
             {
 
@@ -152,8 +166,9 @@ namespace People
                             sqlCommand.Parameters.AddWithValue("@LastName", lastName);
                             connection.Open();
                             sqlCommand.ExecuteNonQuery();
-                            getAllPeople();
                             clearData();
+                            getAllPeople();
+                            
                             ID = 0;
                             MessageBox.Show("Name UPDATED.");
                         }
@@ -228,14 +243,19 @@ namespace People
             //MessageBox.Show("----> " + dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
             //MessageBox.Show("----> " + dataGridView1.Rows[e.RowIndex].ToString() + " --- " + dataGridView1.NewRowIndex.ToString());
             //if (e.RowIndex == dataGridView1.NewRowIndex)
+            /**
             if(ROW != -1)
             {
                 // user is in the new row, disable controls.
-                MessageBox.Show(ROW.ToString() + "----> " + dataGridView1.Rows[ROW].Cells[1].Value.ToString());
-                addName(dataGridView1.Rows[ROW].Cells[1].Value.ToString(), dataGridView1.Rows[ROW].Cells[2].Value.ToString());
+              MessageBox.Show(ROW.ToString() + "----> " + dataGridView1.Rows[ROW].Cells[2].Value.ToString() + "DFDFSF"+ dataGridView1.Rows[ROW].Cells[1].Value.ToString());
+                ///addName(dataGridView1.Rows[ROW].Cells[1].Value.ToString(), dataGridView1.Rows[ROW].Cells[2].Value.ToString());
                 ROW = -1;
+                //getAllPeople();
+                // clearData();
             }
-            
+    **/
+            //MessageBox.Show(ROW.ToString() + "----> " + dataGridView1.Rows[0].Cells[2].Value.ToString());
+
         }
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -284,6 +304,27 @@ namespace People
                         // Close the connection.
                         connection.Close();
                   //  }
+                }
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0 && e.RowIndex >=0)
+            {
+                if (ROW != -1)
+                {
+                    // user is in the new row, disable controls.
+                    addName(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString(), dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString());
+                    ROW = -1;
+                    //MessageBox.Show("YES");
+                }
+                else
+                {
+                    ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+                    updateName(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString(), dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString());
+                    ROW = -1;
+                    
                 }
             }
         }
